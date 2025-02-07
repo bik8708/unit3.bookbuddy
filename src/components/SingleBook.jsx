@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import CheckOutBook from "./CheckOutBook";
 
-function SingleBook() {
+function SingleBook({ handleClick, token, setAllBooks }) {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,8 +13,6 @@ function SingleBook() {
   useEffect(() => {
     axios(`${import.meta.env.VITE_API_BASE_URL}/books/${id}`)
       .then((response) => {
-        // console.log(response.data);
-        // setBook(response.data.data.book);
         console.log(response.data);
         setBook(response.data.book);
       })
@@ -22,7 +20,7 @@ function SingleBook() {
       .finally(() => setLoading(false));
   }, []);
   if (loading) {
-    return <h3 style={{ margin: "40px" }}>Loading...</h3>;
+    return <h3>Loading...</h3>;
   }
   return (
     <div style={{ margin: "40px" }}>
@@ -43,12 +41,10 @@ function SingleBook() {
         }}
       ></img>
       {book.available ? (
-        <CheckOutBook book={book} />
+        <CheckOutBook book={book} token={token} setAllBooks={setAllBooks} />
       ) : (
         "Sorry, this book is not available to borrow right now."
       )}
-      {/* <CheckOutBook /> */}
-      {/* Make button not show up if book is not available */}
     </div>
   );
 }

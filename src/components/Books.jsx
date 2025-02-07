@@ -8,6 +8,9 @@ import CheckOutBook from "./CheckOutBook";
 
 function Books({ token }) {
   const [allBooks, setAllBooks] = useState([]);
+  const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
+  const [sortBooks, setSortBooks] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     axios(`${import.meta.env.VITE_API_BASE_URL}/books`)
@@ -22,68 +25,83 @@ function Books({ token }) {
 
   return (
     <div>
-      <h2
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        Our selection of books:
-      </h2>
+      <div>
+        <h2>Our selection of books:</h2>
+        <nav>
+          <button onClick={() => setShowOnlyAvailable(true)}>
+            Show available books only
+          </button>
+          <button onClick={() => setShowOnlyAvailable(false)}>
+            All books at Book Buddy
+          </button>
+          <button onClick={() => setSortBooks(true)}>Sort by A - Z</button>
+          <input
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Search by Title"
+          />
+        </nav>
+      </div>
+
       <div
         style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       >
-        {allBooks.map((book) => (
-          <div
-            key={book.id}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid #ccc",
-              padding: "10px",
-              margin: "10px",
-              width: "300px",
-              boxSizing: "border-box",
-              textAlign: "center",
-            }}
-          >
-            <Link to={`/books/${book.id}`}>
-              <strong>{book.title}</strong>
-            </Link>
-            <p>by: {book.author}</p>
-            <img
-              src={book.coverimage}
-              alt={book.title}
-              style={{
-                display: "block",
-                width: "100%",
-                maxHeight: "250px",
-                aspectRatio: "16 / 9",
-                objectFit: "cover",
-                objectPosition: "center",
-              }}
-            ></img>
-            <p style={{ fontSize: "12px" }}>
-              Available: {book.available ? "Yes" : "No"}
-            </p>
-            <div
-              style={{
-                textAlign: "center",
-                fontSize: "14px",
-                fontStyle: "italic",
-              }}
-            >
-              {book.available ? (
-                <CheckOutBook book={book} token={token} />
-              ) : (
-                "Sorry, this book is not available to borrow right now. Contact our team to find wait times"
-              )}
+        {allBooks
+          .filter((book) => (showOnlyAvailable ? book.available : true))
+          .filter((book) => {
+            if (!searchText) return true;
+            return book.title.toLowerCase().includes(searchText.toLowerCase());
+          })
+          .sort((a, b) => (sortBooks ? a.title.localeCompare(b.title) : null))
+          .map((book) => (
+            <div key={book.id} className="bookcards">
+              <Link
+                to={`/books/${book.id}`}
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  width: "100%",
+                }}
+              >
+                <p>
+                  <strong>{book.title}</strong>
+                </p>
+                <p>by: {book.author}</p>
+                <img
+                  src={book.coverimage}
+                  alt={book.title}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    maxHeight: "280px",
+                  }}
+                />
+              </Link>
+
+              <p style={{ fontSize: "12px" }}>
+                Available: {book.available ? "Yes" : "No"}
+              </p>
+
+              <div
+                style={{
+                  textAlign: "center",
+                  fontSize: "14px",
+                  fontStyle: "italic",
+                }}
+              >
+                {book.available ? (
+                  <CheckOutBook
+                    book={book}
+                    token={token}
+                    setAllBooks={setAllBooks}
+                    allBooks={allBooks}
+                  />
+                ) : token ? (
+                  "Sorry, this book is not available right now. Contact to find wait times."
+                ) : null}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

@@ -22,7 +22,6 @@ function Login({ setToken }) {
         { email, password }
       );
       console.log(response.data);
-      // if (response.data.message === "Registration successful") {
       if (response.data.message === "Login successful!") {
         setToken(response.data.token);
         setSuccess(true);
@@ -30,11 +29,9 @@ function Login({ setToken }) {
         setEmail("");
         setPassword("");
 
-        console.log(response.data.id); //delete later
-        setTimeout(() => navigate("/account"), 2000);
+        setTimeout(() => navigate("/account"), 1000);
       } else {
         setError(response.data.message || "Registration failed.");
-        console.log(response.data.message); //delete later
       }
     } catch (err) {
       console.error(err.message);
@@ -43,12 +40,10 @@ function Login({ setToken }) {
     }
   }
 
-  //email and password in state
-
   return (
-    <div style={{ margin: "40px", border: "1px solid #ccc", padding: "10px" }}>
-      <h3> Sign into your Book Buddy account to borrow and return books:</h3>
+    <div style={{ margin: "40px", padding: "10px" }}>
       <form onSubmit={handleSubmit}>
+        <h3> Sign into your Book Buddy account to borrow and return books:</h3>
         <label>
           Email:
           <input

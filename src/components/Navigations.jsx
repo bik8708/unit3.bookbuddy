@@ -35,6 +35,3 @@ function Navigations({ token, setToken }) {
 }
 
 export default Navigations;
-
-//passed user into nav as a bar
-// user && <></>

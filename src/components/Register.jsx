@@ -46,21 +46,14 @@ function Register({ setToken }) {
   }
 
   return (
-    <div style={{ margin: "40px", border: "1px solid #ccc", padding: "10px" }}>
+    <div style={{ margin: "40px", padding: "10px" }}>
       <h3>Registration Form:</h3>
 
-      <p>
-        Please complete the registration form below for your Book Buddy Library
-        account:
-      </p>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-        }}
-      >
+      <form onSubmit={handleSubmit}>
+        <p>
+          Please complete the registration form below for your Book Buddy
+          Library account:
+        </p>
         <label>
           First Name:
           <input

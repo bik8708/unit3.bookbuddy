@@ -42,7 +42,11 @@ function Account({ user, token }) {
               >
                 <p>{borrowedBook.title}</p>
                 <p>Reservation#: {borrowedBook.id}</p>
-                <ReturnBook borrowedBook={borrowedBook} token={token} />
+                <ReturnBook
+                  borrowedBook={borrowedBook}
+                  token={token}
+                  setBorrowedBooks={setBorrowedBooks}
+                />
               </div>
             ))}
           </div>
@@ -55,7 +59,3 @@ function Account({ user, token }) {
 }
 
 export default Account;
-
-//useeffect - users.me token and take it out of app jsx
-
-//do the same thing as books but filter for those that are not available
